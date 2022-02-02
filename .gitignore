@@ -1,0 +1,18 @@
+# Arborescence générale
+*.one
+*.autosave
+*.zip
+*.url
+*/.vs
+
+# CODE
+*.atsln
+*.bin
+*.componentinfo.xml
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.sym
+*/Debug/
