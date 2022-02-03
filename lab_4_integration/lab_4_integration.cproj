@@ -159,6 +159,12 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="resPhoto.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="resPhoto.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="247GE4LG-labo4.pdf">
