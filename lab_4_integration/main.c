@@ -37,12 +37,14 @@ void timer1Init();
  */
 void timer4Init();
 
+/**
+ *@brief  Fonction d'initialision.
+ */
+void initAll();
+
 int main(void)
 {
-	timer1Init(); //Initialisation des timers
-	timer4Init();
-	adcInit(); //Initialisation du adc.
-	lcdI2cInit(); //Initialisation du lcd en I2C.
+	initAll();
 	while (1)
 	{
 		if (refreshMesure) //Flag qui est vrai à chaque quatre ms.
@@ -106,4 +108,15 @@ void timer1Init()
 	TIMSK1 |= (1<<OCIE1A); //Output Compare A Match Interrupt Enable
 	OCR1A = 250-1; //62.5ns * 256 * 250 * 125 = 500ms
 	sei();
+}
+
+/**
+ *@brief  Fonction d'initialision.
+ */
+void initAll()
+{
+	timer1Init(); //Initialisation des timers
+	timer4Init();
+	adcInit(); //Initialisation du adc.
+	lcdI2cInit(); //Initialisation du lcd en I2C.
 }
