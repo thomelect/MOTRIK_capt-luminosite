@@ -17,19 +17,15 @@
 #include <stdio.h>
 #include <math.h>
 #include "adc.h"
+#include "resPhoto.h"
 #include "lcdI2c.h"
 
 volatile uint8_t cntCinqCentMs = 0;
 volatile uint8_t cinqCentMSFlag = 0;
 volatile uint8_t refreshMesure = 0;
 char msgLux[17];
-char msgTemp[17];
 uint16_t adcValLux = 0;
-uint16_t adcValTemp = 0;
-float resistance = 0;
-float temperature = 0;
 uint16_t lux = 0;
-uint16_t luxBackLight = 0;
 
 /**
  *@brief  Fonction d'initialisation du timer 0 avec une période de 4ms.
@@ -41,39 +37,31 @@ void timer1Init();
  */
 void timer4Init();
 
+/**
+ *@brief  Fonction d'initialision.
+ */
+void initAll();
+
 int main(void)
 {
-	timer1Init(); //Initialisation des timers
-	timer4Init();
-	adcInit(); //Initialisation du adc.
-	lcdI2cInit(); //Initialisation du lcd en I2C.
+	initAll();
 	while (1)
 	{
 		if (refreshMesure) //Flag qui est vrai à chaque quatre ms.
 		{
 			refreshMesure = 0;
 			adcValLux = adcGetValue(0); //Lecture du canal 0 du ADC.
-			adcValTemp = adcGetValue(1); //Lecture du canal 1 du ADC.
 		}
 		if (cinqCentMSFlag) //Flag qui est vrai à chaque cinq cent ms.
 		{
 			cinqCentMSFlag = 0;
 			
-			luxBackLight = (int)(lux/5); //Valeur en LUXs calculée est divisé par 5 = (3000lux / 640) afin d'obtenir une valeur de 0-640. 3000LUXs à été choisi comme valeur puisque c'est la valeur maximale mesurée en intérieur.
-			if (luxBackLight < 1)
-			luxBackLight = 1; //La valeur minimale de luxBackLight est de 1.
-			TC4H = (luxBackLight >> 8); //Encore une fois, on utilise le mode 10bits puisque la valeur peut monter en haut de 255 jusqu'à 640.
-			OCR4D = luxBackLight;
+			backLight(lux);
 			
 			sprintf(msgLux, "Luminosite:%0d ", lux); //Conversion de la mesure de LUXs en string.
 			lcdI2cEcrireChaineCursor(msgLux, 0, 0); //LUXs est affiché sur la 1ère ligne du LCD.
-			
-			sprintf(msgTemp, "Temperature:%0.1f", temperature); //Conversion de la mesure de température en string.
-			lcdI2cEcrireChaineCursor(msgTemp, 0, 1); //Température est affiché sur la 2e ligne du LCD.
 		}
-		resistance = ((1024 - adcValLux)*1000.0)/adcValLux; //Calcul de notre valeur de résistance.
-		lux = (int)(pow(resistance, -1.4)*11935573.53318); //Calcul de la valeur des LUXs avec la fonction pow de math.h. Les valeurs -1.4 et 11935573.53318 ont étés obtenus en faisant plusieurs mesures et du fichier excel.
-		temperature = (float)adcValTemp / 22; //Puisque le capteur de température est un capteur linéaire, 22 à été obtenu en prenant une valeur en début et en la divisant par un nombre qui nous permet d'arriver à la température actuelle.
+		lux = luxCalculator(adcValLux);
 	}
 }
 
@@ -120,4 +108,15 @@ void timer1Init()
 	TIMSK1 |= (1<<OCIE1A); //Output Compare A Match Interrupt Enable
 	OCR1A = 250-1; //62.5ns * 256 * 250 * 125 = 500ms
 	sei();
+}
+
+/**
+ *@brief  Fonction d'initialision.
+ */
+void initAll()
+{
+	timer1Init(); //Initialisation des timers
+	timer4Init();
+	adcInit(); //Initialisation du adc.
+	lcdI2cInit(); //Initialisation du lcd en I2C.
 }
