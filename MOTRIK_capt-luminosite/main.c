@@ -1,6 +1,6 @@
 /**
 @file 		main.c
-@brief 		Laboratoire #4 en Intégration de systèmes dans lequel on mesure la température avec le LM65, la luminosité en LUX avec une photorésistance PDV-7002. Ces valeurs sont affichés sur l'afficheur LCD.
+@brief 		Laboratoire #4 en IntÃ©gration de systÃ¨mes dans lequel on mesure la tempÃ©rature avec le LM65, la luminositÃ© en LUX avec une photorÃ©sistance PDV-7002. Ces valeurs sont affichÃ©s sur l'afficheur LCD.
 @author 	Thomas Desrosiers
 @version 	1.0
 @date 		2021/03/24
@@ -8,7 +8,7 @@
 @mainpage 	lab_4_integration
 @author 	Thomas Desrosiers
 @section 	MainSection1 Description
-			Laboratoire #4 en Intégration de systèmes dans lequel on mesure la température avec le LM65, la luminosité en LUX avec une photorésistance PDV-7002. Ces valeurs sont affichés sur l'afficheur LCD.
+			Laboratoire #4 en IntÃ©gration de systÃ¨mes dans lequel on mesure la tempÃ©rature avec le LM65, la luminositÃ© en LUX avec une photorÃ©sistance PDV-7002. Ces valeurs sont affichÃ©s sur l'afficheur LCD.
 */
 
 #define F_CPU 16000000UL
@@ -32,7 +32,7 @@ uint16_t lux = 0;
 uint16_t luxBackLight = 0;
 
 /**
- *@brief  Fonction d'initialisation du timer 0 avec une période de 4ms.
+ *@brief  Fonction d'initialisation du timer 0 avec une pÃ©riode de 4ms.
  */
 void timer1Init();
 
@@ -49,45 +49,42 @@ int main(void)
 	lcdI2cInit(); //Initialisation du lcd en I2C.
 	while (1)
 	{
-		if (refreshMesure) //Flag qui est vrai à chaque quatre ms.
+		if (refreshMesure) //Flag qui est vrai Ã  chaque quatre ms.
 		{
 			refreshMesure = 0;
 			adcValLux = adcGetValue(0); //Lecture du canal 0 du ADC.
 			adcValTemp = adcGetValue(1); //Lecture du canal 1 du ADC.
 		}
-		if (cinqCentMSFlag) //Flag qui est vrai à chaque cinq cent ms.
+		if (cinqCentMSFlag) //Flag qui est vrai Ã  chaque cinq cent ms.
 		{
 			cinqCentMSFlag = 0;
 			
-			luxBackLight = (int)(lux/5); //Valeur en LUXs calculée est divisé par 5 = (3000lux / 640) afin d'obtenir une valeur de 0-640. 3000LUXs à été choisi comme valeur puisque c'est la valeur maximale mesurée en intérieur.
+			luxBackLight = (int)(lux/5); //Valeur en LUXs calculï¿½e est divisï¿½ par 5 = (3000lux / 640) afin d'obtenir une valeur de 0-640. 3000LUXs ï¿½ ï¿½tï¿½ choisi comme valeur puisque c'est la valeur maximale mesurï¿½e en intï¿½rieur.
 			if (luxBackLight < 1)
 			luxBackLight = 1; //La valeur minimale de luxBackLight est de 1.
-			TC4H = (luxBackLight >> 8); //Encore une fois, on utilise le mode 10bits puisque la valeur peut monter en haut de 255 jusqu'à 640.
+			TC4H = (luxBackLight >> 8); //Encore une fois, on utilise le mode 10bits puisque la valeur peut monter en haut de 255 jusqu'ï¿½ 640.
 			OCR4D = luxBackLight;
 			
 			sprintf(msgLux, "Luminosite:%0d ", lux); //Conversion de la mesure de LUXs en string.
-			lcdI2cEcrireChaineCursor(msgLux, 0, 0); //LUXs est affiché sur la 1ère ligne du LCD.
-			
-			sprintf(msgTemp, "Temperature:%0.1f", temperature); //Conversion de la mesure de température en string.
-			lcdI2cEcrireChaineCursor(msgTemp, 0, 1); //Température est affiché sur la 2e ligne du LCD.
+			lcdI2cEcrireChaineCursor(msgLux, 0, 0); //LUXs est affichÃ© sur la 1Ã¨re ligne du LCD.
 		}
-		resistance = ((1024 - adcValLux)*1000.0)/adcValLux; //Calcul de notre valeur de résistance.
-		lux = (int)(pow(resistance, -1.4)*11935573.53318); //Calcul de la valeur des LUXs avec la fonction pow de math.h. Les valeurs -1.4 et 11935573.53318 ont étés obtenus en faisant plusieurs mesures et du fichier excel.
-		temperature = (float)adcValTemp / 22; //Puisque le capteur de température est un capteur linéaire, 22 à été obtenu en prenant une valeur en début et en la divisant par un nombre qui nous permet d'arriver à la température actuelle.
+		resistance = ((1024 - adcValLux)*1000.0)/adcValLux; //Calcul de notre valeur de rï¿½sistance.
+		lux = (int)(pow(resistance, -1.4)*11935573.53318); //Calcul de la valeur des LUXs avec la fonction pow de math.h. Les valeurs -1.4 et 11935573.53318 ont ï¿½tï¿½s obtenus en faisant plusieurs mesures et du fichier excel.
+		temperature = (float)adcValTemp / 22; //Puisque le capteur de tempï¿½rature est un capteur linï¿½aire, 22 ï¿½ ï¿½tï¿½ obtenu en prenant une valeur en dï¿½but et en la divisant par un nombre qui nous permet d'arriver ï¿½ la tempï¿½rature actuelle.
 	}
 }
 
 /**
-*@brief  Le timer 1 est initialisé à 4ms. à chaques 4ms, refresh mesure est HAUT et après 500ms(125 x 4ms) cinqCentMSFlag est HAUT.
+*@brief  Le timer 1 est initialisÃ© Ã  4ms. Ã  chaques 4ms, refresh mesure est HAUT et aprÃ¨s 500ms(125 x 4ms) cinqCentMSFlag est HAUT.
 */
 ISR(TIMER1_COMPA_vect)
 {
-	refreshMesure = 1; //À chaque 4ms. Ce flag sera utilisé pour faire une nouvelle mesure d'ADC.
+	refreshMesure = 1; //Ã€ chaque 4ms. Ce flag sera utilisÃ© pour faire une nouvelle mesure d'ADC.
 	cntCinqCentMs++;
 	if (cntCinqCentMs >= 125)
 	{
 		cntCinqCentMs -= 125;
-		cinqCentMSFlag = 1; //À chaque 500ms. Ce flag sera utilisé pour changer le backlight et l'affichage des valeurs des capteurs.
+		cinqCentMSFlag = 1; //Ã€ chaque 500ms. Ce flag sera utilisÃ© pour changer le backlight et l'affichage des valeurs des capteurs.
 	}
 }
 
@@ -113,8 +110,8 @@ void timer4Init()
 void timer1Init()
 {
 	//TCCR1A : COM1A1 COM1A0 COM1B1 COM1B0 COM1C1 COM1C0 WGM11 WGM10
-	//TCCR1B: ICNC1 ICES1 – WGM13 WGM12 CS12 CS11 CS10
-	//TIMSK1: – – ICIE1 – OCIE1C OCIE1B OCIE1A TOIE1
+	//TCCR1B: ICNC1 ICES1 â€“ WGM13 WGM12 CS12 CS11 CS10
+	//TIMSK1: â€“ â€“ ICIE1 â€“ OCIE1C OCIE1B OCIE1A TOIE1
 	TCCR1B = (1<<WGM12); //mode CTC.
 	TCCR1B |= (1<<CS12); //Prescaler de 256.
 	TIMSK1 |= (1<<OCIE1A); //Output Compare A Match Interrupt Enable

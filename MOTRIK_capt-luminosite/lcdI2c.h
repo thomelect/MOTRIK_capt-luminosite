@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file 		lcdI2c.h
 @brief 		Libraire qui adapte la librairie LCD fait lors de la session précédente avec la librairie I²C permettant ainsi d'utiliser le LCD avec un IO expander I²C
 @author 	Thomas Desrosiers

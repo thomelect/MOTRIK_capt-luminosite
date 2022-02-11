@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file 		i2c.c
 @brief 		Librairie I2C qui prmet l'utilisation complète de la lecture et de l'écriture à un module I²C en interruption.
 @author 	Thomas Desrosiers
