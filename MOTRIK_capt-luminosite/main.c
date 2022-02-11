@@ -3,10 +3,10 @@
  * @brief 	  Partie du projet Motrik qui sera utilisé afin de mesure la luminosité ambiante en LUX avec une photorésistance PDV-7002.
  *
  * @author 	  Thomas Desrosiers
- * @version   1.0
- * @date 	  2021/03/24
+ * @version   2.0
+ * @date 	  2022/02/11
 
- * @mainpage  lab_4_integration
+ * @mainpage  MOTRIK_capt-luminosite
  * @author 	  Thomas Desrosiers
  * @section   MainSection1 Description
 			  Partie du projet Motrik qui sera utilisé afin de mesure la luminosité ambiante en LUX avec une photorésistance PDV-7002.
@@ -18,13 +18,13 @@
 #include <stdio.h>
 #include <math.h>
 #include "adc.h"
+#include "resPhoto.h"
 
 volatile uint8_t cntCinqCentMs = 0;
 volatile uint8_t cinqCentMSFlag = 0;
 volatile uint8_t refreshMesure = 0;
 char msgLux[17];
 uint16_t adcValLux = 0;
-float resistance = 0;
 uint16_t lux = 0;
 uint16_t luxBackLight = 0;
 
@@ -32,12 +32,12 @@ uint16_t luxBackLight = 0;
 /**
  * @brief  Fonction d'initialisation du timer 0 avec une période de 4ms.
  */
-void timer1Init();
+void timer1Init(void);
 
 /**
  * @brief  Fonction d'initialision du timer 4 en mode PWM.
  */
-void timer4Init();
+void timer4Init(void);
 
 /**
  *@brief  Fonction qui regroupe l'initialisation des différents I/O et des librairies.
@@ -57,17 +57,10 @@ int main(void)
 		if (cinqCentMSFlag) // Flag qui est vrai à chaque cinq cent ms.
 		{
 			cinqCentMSFlag = 0;
-			
-			luxBackLight = (int)(lux / 5); // Valeur en LUXs calculée est divisé par 5 = (3000lux / 640) afin d'obtenir une valeur de 0-640. 3000LUXs à été choisi comme valeur puisque c'est la valeur maximale mesurée en intérieur.
-			if (luxBackLight < 1)
-				luxBackLight = 1;		// La valeur minimale de luxBackLight est de 1.
-			TC4H = (luxBackLight >> 8); // Encore une fois, on utilise le mode 10bits puisque la valeur peut monter en haut de 255 jusqu'à 640.
-			OCR4D = luxBackLight;
-
+			lux10bits(lux);
 			sprintf(msgLux, "Luminosite:%0d ", lux); // Conversion de la mesure de LUXs en string.
 		}
-		resistance = ((1024 - adcValLux) * 1000.0) / adcValLux; // Calcul de notre valeur de résistance.
-		lux = (int)(pow(resistance, -1.4) * 11935573.53318);	// Calcul de la valeur des LUXs avec la fonction pow de math.h. Les valeurs -1.4 et 11935573.53318 ont étés obtenus en faisant plusieurs mesures et du fichier excel.
+		lux = luxCalculator(adcValLux);
 	}
 }
 
@@ -85,14 +78,26 @@ ISR(TIMER1_COMPA_vect)
 	}
 }
 
-miscInit(void)
+void miscInit(void)
 {
 	timer1Init(); // Initialisation des timers
 	timer4Init();
 	adcInit(); // Initialisation du adc.
 }
 
-void timer4Init()
+void timer1Init(void)
+{
+	// TCCR1A : COM1A1 COM1A0 COM1B1 COM1B0 COM1C1 COM1C0 WGM11 WGM10
+	// TCCR1B: ICNC1 ICES1 – WGM13 WGM12 CS12 CS11 CS10
+	// TIMSK1: – – ICIE1 – OCIE1C OCIE1B OCIE1A TOIE1
+	TCCR1B = (1 << WGM12);	 // mode CTC.
+	TCCR1B |= (1 << CS12);	 // Prescaler de 256.
+	TIMSK1 |= (1 << OCIE1A); // Output Compare A Match Interrupt Enable
+	OCR1A = 250 - 1;		 // 62.5ns * 256 * 250 * 125 = 500ms
+	sei();
+}
+
+void timer4Init(void)
 {
 	// TCCR4A: COM4A1 COM4A0 COM4B1 COM4B0 FOC4A FOC4B PWM4A PWM4B
 	// TCCR4B: PWM4X PSR4 DTPS41 DTPS40 CS43 CS42 CS41 CS40
@@ -109,16 +114,4 @@ void timer4Init()
 	OCR4C = top;
 	TC4H = (topD >> 8); // Utilisation des 2bits de TC4H affin de fonctionner en mode 10bits.
 	OCR4D = topD;
-}
-
-void timer1Init()
-{
-	// TCCR1A : COM1A1 COM1A0 COM1B1 COM1B0 COM1C1 COM1C0 WGM11 WGM10
-	// TCCR1B: ICNC1 ICES1 – WGM13 WGM12 CS12 CS11 CS10
-	// TIMSK1: – – ICIE1 – OCIE1C OCIE1B OCIE1A TOIE1
-	TCCR1B = (1 << WGM12);	 // mode CTC.
-	TCCR1B |= (1 << CS12);	 // Prescaler de 256.
-	TIMSK1 |= (1 << OCIE1A); // Output Compare A Match Interrupt Enable
-	OCR1A = 250 - 1;		 // 62.5ns * 256 * 250 * 125 = 500ms
-	sei();
 }

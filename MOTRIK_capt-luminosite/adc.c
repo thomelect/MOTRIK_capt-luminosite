@@ -1,6 +1,6 @@
 /**
  * @file 	 adc.c
- * @brief 	 Librairie ADC qui comprend les fonctions d'initialisation et de transmission de la valeur lu vers le main (getter). La conversion se déclanche manuellement larsque l'on appel la fonction adcGetValue().
+ * @brief 	 Librairie ADC qui comprend les fonctions d'initialisation et de transmission de la valeur lu vers le main (getter). La conversion se déclanche manuellement lorsque l'on appel la fonction adcGetValue().
  * @author 	 Thomas Desrosiers
  * @version  1.0
  * @date 	 2021/02/28
