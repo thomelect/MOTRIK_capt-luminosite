@@ -19,6 +19,7 @@
 #include <math.h>
 #include "adc.h"
 #include "resPhoto.h"
+#include "usart.h"
 
 volatile uint8_t cntCinqCentMs = 0;
 volatile uint8_t cinqCentMSFlag = 0;
@@ -58,7 +59,8 @@ int main(void)
 		{
 			cinqCentMSFlag = 0;
 			lux10bits(lux);
-			sprintf(msgLux, "Luminosite:%0d ", lux); // Conversion de la mesure de LUXs en string.
+			sprintf(msgLux, "Luminosite:%0d \n\r", lux); // Conversion de la mesure de LUXs en string.
+			usartSendString(msgLux);
 		}
 		lux = luxCalculator(adcValLux);
 	}
@@ -83,6 +85,7 @@ void miscInit(void)
 	timer1Init(); // Initialisation des timers
 	timer4Init();
 	adcInit(); // Initialisation du adc.
+	usartInit(1000000, F_CPU);
 }
 
 void timer1Init(void)
