@@ -1,10 +1,10 @@
 /**
-@file 		photoRes.c
-@brief 		Librairie pour le capteur de luminosite qui comprend les fonctions
-@author 	Thomas Desrosiers et Matis Goulet
-@version 	1.0
-@date 		2022/03/2
-*/
+ * @file 	 photoRes.c
+ * @brief 	 Librairie pour le capteur de luminosite qui comprend les fonctions
+ * @author 	 Thomas Desrosiers et Matis Goulet
+ * @version  1.0
+ * @date 	 2022/02/11
+ */
 
 #ifndef RESPHOTO_H_
 #define RESPHOTO_H_
@@ -14,17 +14,16 @@
 #define DIX_POW_B 11935573.53318
 
 /**
-*@brief  Fonction qui permet au main.c de calculer les lux pour le backlight et le set.
-*@param  lesLux valeur de lux mesurer.
-*@return void
-*/
+ * @brief         Fonction qui permet au main.c de calculer les lux pour le backlight et le set.
+ * @param lesLux  Valeur mesurée en lux.
+ */
 void backLight(uint16_t lesLux);
 
 /**
-*@brief  Fonction qui permet au main.c de convertir la valeur mesure de l'adc en nombre de lux.
-*@param  adcLux valeur mesurer par l'adc .
-*@return uint16_t valeur de lux calculer.
-*/
+ * @brief         Fonction qui est utilisée afin de convertir la valeur mesurée de l'adc en lux.
+ * @param adcLux  Valeur mesurée par l'adc.
+ * @return        Luminosité calculée en lux.
+ */
 uint16_t luxCalculator(uint16_t adcLux);
 
 #endif /* RESPHOTO_H_ */
