@@ -144,19 +144,19 @@
     <Compile Include="adc.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="i2c.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="i2c.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcdI2c.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcdI2c.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="resPhoto.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="resPhoto.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="resPhoto.c">
