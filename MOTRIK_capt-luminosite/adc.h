@@ -12,14 +12,14 @@
 #define _NB_POINTS_MAX 400
 
 /**
- * @brief  Fonction d'initialisation du ADC.
+ * @brief  Fonction d'initialisation de l'ADC.
  */
 void adcInit();
 
 /**
- * @brief  Fonction qui permet au main.c d'acceder au tableau d'entiers correspondant au canal choisi en paramètre.
- * @param  canal prend la valeur de 0 ou de 1 tout dépendant du canal dont on souhaite connaitre la valeur.
- * @return uint8_t* retourne le tableau correspondant au canal choisi en paramètre.
+ * @brief        Fonction qui permet au main.c d'acceder au tableau d'entiers correspondant au canal choisi en paramètre.
+ * @param canal  Canal sélectionné [0 - 1].
+ * @return       Tableau contenant les valeurs lues par l'ADC depuis le canal choisi.
  */
 uint16_t adcGetValue(uint8_t canal);
 
