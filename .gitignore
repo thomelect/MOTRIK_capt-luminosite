@@ -5,6 +5,9 @@
 # so most of the project and solution files are the same as VS files,
 # only prefixed by an `at`.
 
+# Arborescence générale
+ressources/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 
