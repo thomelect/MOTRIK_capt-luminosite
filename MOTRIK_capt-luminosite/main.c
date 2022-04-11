@@ -21,6 +21,15 @@
 #include "resPhoto.h"
 #include "usart.h"
 
+
+/**********
+ * DEFINE *
+ **********/
+
+
+/************
+ * VARIABLE *
+ ************/
 volatile uint8_t cntCinqCentMs = 0;
 volatile uint8_t cinqCentMSFlag = 0;
 volatile uint8_t refreshMesure = 0;
@@ -29,7 +38,10 @@ uint16_t adcValLux = 0;
 uint16_t lux = 0;
 uint16_t luxBackLight = 0;
 
-// Prototypes des fonctions locales
+
+/**************************
+ * PROTOTYPES DE FONCTION *
+ **************************/
 /**
  * @brief  Fonction d'initialisation du timer 0 avec une période de 4ms.
  */
@@ -45,6 +57,10 @@ void timer4Init(void);
  */
 void miscInit(void);
 
+
+/********
+ * MAIN *
+ ********/
 int main(void)
 {
 	miscInit();
@@ -66,6 +82,10 @@ int main(void)
 	}
 }
 
+
+/****************
+ * INTERRUPTION *
+ ****************/
 /**
  * @brief  Le timer 1 est initialisé à 4ms. à chaques 4ms, refresh mesure est HAUT et après 500ms(125 x 4ms) cinqCentMSFlag est HAUT.
  */
@@ -80,6 +100,10 @@ ISR(TIMER1_COMPA_vect)
 	}
 }
 
+
+/************************
+ * DÉFINITION FONCTIONS *
+ ************************/
 void miscInit(void)
 {
 	timer1Init(); // Initialisation des timers
